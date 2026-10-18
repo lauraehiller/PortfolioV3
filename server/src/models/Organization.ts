@@ -16,7 +16,7 @@ const organizationSchema = new Schema(
       default: "Draft",
     },
     isArchived: { type: Boolean, default: false, required: true },
-    archivedOn: { type: Date, default: Date.now, required: true },
+    archivedOn: { type: Date },
   },
   { timestamps: true },
 );

@@ -3,6 +3,8 @@ import cors from "cors";
 import helmet from "helmet";
 import mongoose from "mongoose";
 import { env } from "./config";
+import { publicRouter } from "./routes/publicRoutes";
+import { errorHandler, notFound } from "./middleware/errorHandler";
 
 export const app = express();
 
@@ -17,3 +19,8 @@ app.get("/api/health", (_req, res) => {
     uptime: process.uptime(),
   });
 });
+
+app.use("/api", publicRouter);
+
+app.use(notFound);
+app.use(errorHandler);

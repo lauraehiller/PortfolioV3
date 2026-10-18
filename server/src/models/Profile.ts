@@ -2,6 +2,29 @@ import { Schema, model, InferSchemaType } from "mongoose";
 
 const profileSchema = new Schema(
   {
+    // Account
+    username: {
+      type: String,
+      required: [true, "Username is required"],
+      unique: true,
+      lowercase: true,
+      trim: true,
+      minlength: [3, "Username must be at least 5 characters long"],
+    },
+    password: {
+      type: String,
+      required: [true, "Password is required"],
+      minlength: [8, "Password must be at least 8 characters long"],
+      select: false,
+    },
+    role: {
+      type: String,
+      enum: ["Admin", "Viewer"],
+      required: true,
+      default: "Viewer",
+    },
+
+    // Public profile
     firstName: {
       type: String,
       required: [true, "First Name is required"],
@@ -35,15 +58,18 @@ const profileSchema = new Schema(
       ],
       default: [],
     },
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
     isArchived: { type: Boolean, default: false, required: true },
-    archivedOn: { type: Date, default: Date.now, required: true },
+    archivedOn: { type: Date },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    toJSON: {
+      transform: (_doc, ret) => {
+        const { password, ...safe } = ret;
+        return safe;
+      },
+    },
+  },
 );
 
 export type ProfileData = InferSchemaType<typeof profileSchema>;

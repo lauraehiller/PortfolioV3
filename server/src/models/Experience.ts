@@ -12,6 +12,8 @@ const experienceSchema = new Schema(
     },
     summary: { type: String, default: "", trim: true },
     description: { type: String, default: "", trim: true },
+    startedOn: { type: Date, required: true },
+    endedOn: { type: Date },
     isFeatured: { type: Boolean, default: true },
     status: {
       type: String,
@@ -22,14 +24,14 @@ const experienceSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Organization",
     },
-    displayOrder: { type: Number, default: 0 },
+    displayOrder: { type: Number, required: true, default: 0 },
     isArchived: { type: Boolean, default: false, required: true },
-    archivedOn: { type: Date, default: Date.now, required: true },
+    archivedOn: { type: Date },
   },
   { timestamps: true },
 );
 
 experienceSchema.index({ status: 1, displayOrder: 1 });
 
-export type experienceData = InferSchemaType<typeof experienceSchema>;
-export const experience = model("experience", experienceSchema);
+export type ExperienceData = InferSchemaType<typeof experienceSchema>;
+export const Experience = model("Experience", experienceSchema);
