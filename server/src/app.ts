@@ -7,6 +7,7 @@ import { publicRouter } from "./routes/publicRoutes";
 import { errorHandler, notFound } from "./middleware/errorHandler";
 import cookieParser from "cookie-parser";
 import { authRouter } from "./routes/authRoutes";
+import { adminRouter } from "./routes/adminRoutes";
 
 export const app = express();
 
@@ -28,6 +29,7 @@ app.get("/api/health", (_req, res) => {
 
 app.use("/api", publicRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/admin", adminRouter);
 
 app.use(notFound);
 app.use(errorHandler);
