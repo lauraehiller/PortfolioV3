@@ -1,4 +1,5 @@
 import { Schema, model, InferSchemaType } from "mongoose";
+import bcrypt from "bcryptjs";
 
 const profileSchema = new Schema(
   {
@@ -71,6 +72,11 @@ const profileSchema = new Schema(
     },
   },
 );
+
+profileSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
+  this.password = await bcrypt.hash(this.password, 12);
+});
 
 export type ProfileData = InferSchemaType<typeof profileSchema>;
 export const Profile = model("Profile", profileSchema);

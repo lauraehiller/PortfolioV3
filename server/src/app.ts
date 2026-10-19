@@ -5,12 +5,18 @@ import mongoose from "mongoose";
 import { env } from "./config";
 import { publicRouter } from "./routes/publicRoutes";
 import { errorHandler, notFound } from "./middleware/errorHandler";
+import cookieParser from "cookie-parser";
+import { authRouter } from "./routes/authRoutes";
 
 export const app = express();
+
+if (env.NODE_ENV === "production") app.set("trust proxy", 1);
 
 app.use(helmet());
 app.use(cors({ origin: env.CLIENT_ORIGIN, credentials: true }));
 app.use(express.json());
+
+app.use(cookieParser());
 
 app.get("/api/health", (_req, res) => {
   res.json({
@@ -21,6 +27,7 @@ app.get("/api/health", (_req, res) => {
 });
 
 app.use("/api", publicRouter);
+app.use("/api/auth", authRouter);
 
 app.use(notFound);
 app.use(errorHandler);
